@@ -126,3 +126,9 @@ lint/tmp/
 node_modules
 
 .gitignore
+
+#firebase
+.github
+.firebase
+.firebaserc
+firebase.json
