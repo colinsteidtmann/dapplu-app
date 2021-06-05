@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+
+html, body {
+  height: 100%;
+}
+
+#root, .App {
+  min-height: 100vh;
+}
+
+
+.end-5 {
+  right:5%;
+}
+
