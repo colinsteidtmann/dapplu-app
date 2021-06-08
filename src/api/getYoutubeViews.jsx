@@ -5,7 +5,7 @@ export const getYoutubeViews = async(mediaLink) => {
 	  try {
 	    const viewCountReq = await axios({
 	        method: "post",
-	        url: process.env.REACT_APP_TEST_API_URL + "getYoutubeViews",
+	        url: process.env.REACT_APP_API_URL + "getYoutubeViews",
 	        data: {
 	          id: mediaLink
 	        }
