@@ -1,4 +1,5 @@
-import { ethers } from 'ethers'
+import { ethers } from 'ethers';
+import {chainInfo, tokensInfo} from "#constants";
 
 // Data checks
 export const isUndefined = ({input}) => {
@@ -62,5 +63,39 @@ export const isTrue = ({input}) => {
 
 export const isFalse = ({input}) => {
   return (input === false);
+}
+
+
+export const isChainSupported = ({chainId}) => {
+  if (!chainId) {
+    return false;
+  }
+  
+  try {
+    return chainInfo.find(chain => chain.id === chainId).supported;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
+
+export const isTokenSupported = ({tokenId, chainId}) => {
+  if (!chainId || !tokenId) {
+    return false;
+  }
+  
+  try {
+    let tokenSupport = false
+    const tokenAddresses = tokensInfo.find(token => token.id === tokenId).addresses;
+    tokenAddresses.forEach(addressObj => {
+      if (addressObj.chainId === chainId) {
+        tokenSupport = true;
+      }
+    });
+    return tokenSupport
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
 }
 

@@ -10,3 +10,4 @@ export {default as Toast } from "./Toast/index";
 export {default as UserCurrency } from "./UserCurrency/index";
 export {default as ViewAgreements } from "./ViewAgreements/index";
 export {default as Web3Status } from "./Web3Status/index";
+export {default as WrongNetworkAlert } from "./WrongNetworkAlert/index";

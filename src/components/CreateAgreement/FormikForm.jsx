@@ -11,7 +11,7 @@ import TokenPaymentOption from "./TokenPaymentOption";
 // custom imports
 import { useLocalStorage } from "#hooks";
 import { isAddress } from "#utils";
-import { getCurrencyIconAndSymbol } from "#utils/dappFunctions";
+import { getCurrencyIcon, getCurrencySymbol } from "#utils/dappFunctions";
 
 
 // Validation
@@ -136,7 +136,10 @@ export const FormikForm = (props) => {
 	          		    <Form.Label>Pay Per View</Form.Label>
 	          		    <InputGroup>
 	          		      <InputGroup.Prepend className="bg-transparent">
-	          		        <InputGroup.Text className="bg-transparent" id="basic-addon1">{getCurrencyIconAndSymbol({currencyId: userCurrency})}</InputGroup.Text>
+	          		        <InputGroup.Text className="bg-transparent" id="basic-addon1">
+	          		        	{getCurrencyIcon({currencyId: userCurrency})}
+	          		        	{getCurrencySymbol({currencyId: userCurrency})}
+	          		        </InputGroup.Text>
 	          		      </InputGroup.Prepend>
 	            		    <Form.Control 
 	            		    	type="text"
@@ -161,7 +164,10 @@ export const FormikForm = (props) => {
 	          		    <Form.Label>Budget</Form.Label>
 	          		    <InputGroup>
 	          		      <InputGroup.Prepend className="bg-transparent">
-	          		        <InputGroup.Text className="bg-transparent" id="basic-addon1">{getCurrencyIconAndSymbol({currencyId:userCurrency})}</InputGroup.Text>
+	          		        <InputGroup.Text className="bg-transparent" id="basic-addon1">
+	          		        	{getCurrencyIcon({currencyId: userCurrency})}
+	          		        	{getCurrencySymbol({currencyId: userCurrency})}
+	          		        </InputGroup.Text>
 	          		      </InputGroup.Prepend>
 	              		    <Form.Control 
 	              		    	type="text"

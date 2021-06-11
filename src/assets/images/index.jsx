@@ -1,0 +1,1 @@
+export {default as dappluLogo } from "./dappluLogo.png";

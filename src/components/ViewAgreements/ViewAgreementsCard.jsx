@@ -15,7 +15,7 @@ export const ViewAgreementsCard = (props) => {
 		  	</div>
 		  	<div className="col-4 col-lg-3 ">
 		  		{shortEndDate}
-		  		<span class="position-absolute end-5">
+		  		<span className="position-absolute end-5">
 		  		<i className="fas fa-chevron-right"></i>
 		  		</span>
 		  	</div>

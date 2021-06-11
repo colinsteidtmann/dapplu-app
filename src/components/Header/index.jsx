@@ -1,7 +1,7 @@
 import React from "react";
 import {Link} from "react-router-dom";
 // components
-import { Web3Status, UserCurrency } from '#components';
+import { Web3Status, UserCurrency, WrongNetworkAlert } from '#components';
 // custom imports
 
 
@@ -22,10 +22,12 @@ export const Navbar = (props) => {
 export const Header = () => {
 	return(
 		<>
+
 			<Navbar> 
 				<Link className="navbar-brand" to="/">Dapplu</Link>
 				<Web3Status />
 			</Navbar>
+			<WrongNetworkAlert />
 			<div className="container-fluid row text-end mt-3 pe-0">
 				<UserCurrency />
 			</div>

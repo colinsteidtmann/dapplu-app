@@ -1,30 +1,28 @@
 import React from "react";
 import {KovanAgreementFactory, KovanBaseAgreement, ERC20} from "#abis";
+import {ETH, DAI, USDC, USDT, ETH_Currency, USD_Currency} from "#assets/svg";
 import {ethers} from "ethers";
-
-export const chainName = {
-	1: "Mainnet",
-	3: "Ropsten",
-	4: "Rinkeby",
-	42: "Kovan"
-}
 
 export const chainInfo = [
 	{
 		id: 1,
-		name: "Mainnet"
+		name: "Mainnet",
+		supported: false
 	},
 	{
 		id: 3,
-		name: "Ropsten"
+		name: "Ropsten",
+		supported: false
 	},
 	{
 		id: 4,
-		name: "Rinkeby"
+		name: "Rinkeby",
+		supported: false
 	},
 	{
 		id: 42,
-		name: "Kovan"
+		name: "Kovan",
+		supported: true
 	}
 ]
 
@@ -34,34 +32,45 @@ export const tokensInfo = [
 		"symbol": "ETH",
 		"name": "ethereum",
 		"decimals": 18,
-		"address": ethers.constants.AddressZero,
 		"addresses": [
 			{
 				chainId: 42,
 				address: ethers.constants.AddressZero
 			},
 		],
+		"icon": <img src={ETH} className="img-fluid custom-icon" alt="ETH token icon" />,
 	},
 	{
 		"id":1,
 		"symbol": "DAI",
 		"name": "dai",
 		"decimals": 18,
-		"address": "0xd0a1e359811322d97991e03f863a0c30c2cf029c"
+		"addresses": [
+			{
+				chainId: 42,
+				address: "0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa"
+			},
+		],
+		"icon": <img src={DAI} className="img-fluid custom-icon" alt="DAI token icon" />,
 	}, 
 	{
 		"id":2,
 		"symbol": "USDT",
 		"name": "tether",
 		"decimals": 6,
-		"address": "0xd0a1e359811322d97991e03f863a0c30c2cf029c"
+		"addresses": [
+		],
+		"icon": <img src={USDT} className="img-fluid custom-icon" alt="USDT token icon" />,
 	}, 
 	{
 		"id":3,
 		"symbol": "USDC",
 		"name": "USD Coin",
 		"decimals": 6,
-		"address": "0xd0a1e359811322d97991e03f863a0c30c2cf029c"
+		"addresses": [
+		],
+		"icon": <img src={USDC} className="img-fluid custom-icon" alt="USDC token icon" />,
+
 	}
 ]
 
@@ -70,13 +79,13 @@ export const currencyInfo = [
 		"id":0,
 		"symbol": "ETH",
 		"name": "eth",
-		"icon": (props) => {return <><i className="fab fa-ethereum me-1"></i>{props.text}</>},
+		"icon": <img src={ETH_Currency} className="img-fluid custom-icon" alt="ETH currency icon" />,
 	},
 	{
 		"id":1,
 		"symbol": "USD",
 		"name": "usd",
-		"icon": (props) => {return <><i className="fas fa-dollar-sign me-1"></i>{props.text}</>},
+		"icon": <img src={USD_Currency} className="img-fluid custom-icon" alt="USD currency icon" />,
 	}
 ]
 

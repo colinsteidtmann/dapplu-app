@@ -8,7 +8,7 @@ import InfoItem from "./InfoItem";
 import CurrencyDisplay from "./CurrencyDisplay";
 // custom imports
 import {useAgreement, useLocalCurrency, useViewCountApi} from "#hooks";
-import {getCurrencyIconAndSymbol, tolocaleString} from "#utils/dappFunctions";
+import {getTokenIcon, getTokenSymbol, tolocaleString} from "#utils/dappFunctions";
 import {formatCurrency} from "#utils/contractFunctions";
 
 const LoadingDisplay = () => {
@@ -99,9 +99,10 @@ const MainDisplay = (props) => {
 				<div className="col-12 col-lg-4 text-start mx-auto ">
 
 					<InfoItem>
-						<InfoItem.Label text="Currency Paid With" />
+						<InfoItem.Label text="Token Paid With" />
 						<InfoItem.Body>
-							{getCurrencyIconAndSymbol({currencyId:tokenId})}
+							{getTokenIcon({"tokenId":tokenId})}
+							{getTokenSymbol({"tokenId":tokenId})}
 						</InfoItem.Body>
 					</InfoItem>
 

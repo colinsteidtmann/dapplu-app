@@ -42,21 +42,6 @@ const getFactoryContract = ({chainId, provider}) => {
 	return new ethers.Contract(address, abi, provider);
 }
 
-const getTokenIdFromAddress = ({tokenAddress, chainId}) => {
-	return tokensInfo.find(token => 
-		(token.addresses.find(tokenAddressInfo => tokenAddressInfo.chainId === chainId).address) === tokenAddress
-	).id
-}
-
-const getTokenAddress = ({tokenId, chainId}) => {
-	const tokenAddresses = tokensInfo.find(token => token.id === tokenId).addresses;
-	return tokenAddresses.find(token => token.chainId === chainId).address;
-}
-
-const getTokenDecimals = ({tokenId}) => {
-	return tokensInfo.find(token => token.id === tokenId).decimals;
-}
-
 const getERC20Abi = ({chainId}) => {
 	return contractsInfo.find(contract => contract.chainId === chainId).erc20.abi;
 }
@@ -65,6 +50,27 @@ const getERC20Contract = ({chainId, tokenId, provider}) => {
 	const abi = getERC20Abi({chainId:chainId});
 	const erc20Address = getTokenAddress({tokenId:tokenId, chainId:chainId});
 	return new ethers.Contract(erc20Address, abi, provider);
+}
+
+const getTokenContract = ({tokenContractAddress, chainId, provider}) => {
+	const abi = getERC20Abi({chainId:chainId});
+	return new ethers.Contract(tokenContractAddress, abi, provider);
+}
+
+
+const getTokenIdFromAddress = ({tokenAddress, chainId}) => {
+	return tokensInfo.find(token => 
+		(token.addresses.find(tokenAddressInfo => tokenAddressInfo.chainId === chainId).address) === tokenAddress
+	).id
+}
+
+export const getTokenAddress = ({tokenId, chainId}) => {
+	const tokenAddresses = tokensInfo.find(token => token.id === tokenId).addresses;
+	return tokenAddresses.find(token => token.chainId === chainId).address;
+}
+
+const getTokenDecimals = ({tokenId}) => {
+	return tokensInfo.find(token => token.id === tokenId).decimals;
 }
 
 const getLinkTokenAddress = ({chainId}) => {
@@ -255,7 +261,7 @@ export const createAgreement = async({convertFn, formInputs, provider, chainId, 
 	const oracleAddress = getOracleAddress({chainId:chainId});
 	const tokenAddress = getTokenAddress({tokenId:tokenPaymentOption, chainId:chainId});
 
-	// contract vars
+	// factory contract vars
 	const factoryContract = getFactoryContract({chainId:chainId, provider:provider});
 	const signer = provider.getSigner(); 
 	const valueToSend = getSendAmount({amount:budget, usingEth:usingEth});
@@ -275,6 +281,13 @@ export const createAgreement = async({convertFn, formInputs, provider, chainId, 
 	    setContractError({name:"AgreementCreatedError", values:{error}});
 	    console.log("AgreementCreatedError", error)
 	});
+
+	// Approve transfer of token if not using eth
+	if (!usingEth) {
+		const tokenContract = getTokenContract({tokenContractAddress: tokenAddress, chainId: chainId, provider:provider});
+		await tokenContract.connect(signer).approve(factoryContract.address, budget);
+	}
+
 
 	// Create the agreement
 	try {
@@ -402,28 +415,45 @@ export const getDisplayAgreementDetails = async({agreementAddr, chainId, provide
 	const mediaLink = details._mediaLink;
 
 	const {agreementInfoObject, agreementFileUrl} = await getFromFleek({agreementAddress:agreementAddr});
+	
+	// UI vars
+	const agreementName = agreementInfoObject.agreementName;
+	const {
+		_brand,
+		_influencer
+	} = details;
 	const createdDate = new Date(agreementInfoObject.createdDate * 1000);
+	const shortCreatedDate = getDateShort({dateObj:createdDate});
+	const longCreatedDate = getDateLong({dateObj:createdDate});
+	const shortEndDate = getDateShort({dateObj:endDateObj});
+	const longEndDate = getDateLong({dateObj:endDateObj});
+	const payPerViewFormatted = formatPaymentUnits({amountString:payPerView, decimals:tokenDecimals});
+	const budgetFormatted = formatPaymentUnits({amountString:budget, decimals:tokenDecimals});
+	const budgetRemainingFormatted = usingEth ? 
+		formatPaymentUnits({amountString:await getContractEthBalance({provider:provider, address:agreementAddr}), decimals:tokenDecimals}) 
+		: formatPaymentUnits({amountString:await getContractTokenBalance({provider:provider, chainId:chainId, tokenId:tokenId, contractAddress:baseContract.address}), decimals:tokenDecimals});
+	const _agreementFileUrl = (agreementFileUrl ? agreementFileUrl : "");
+	const _mediaLink = mediaLink ? mediaLink : "";
+	const _agreementStatus = getStatusName({statusId:agreementStatus});
 	return ({
-		agreementName: agreementInfoObject.agreementName,
+		agreementName: agreementName,
 		agreementAddress: agreementAddr,
 		tokenId: tokenId,
 		tokenDecimals: tokenDecimals,
 		tokenPaymentAddress: tokenPaymentAddress,
-		brand: details._brand,
-		influencer: details._influencer,
-		shortCreatedDate: getDateShort({dateObj:createdDate}),
-		longCreatedDate: getDateLong({dateObj:createdDate}),
-		shortEndDate: getDateShort({dateObj:endDateObj}),
-		longEndDate: getDateLong({dateObj:endDateObj}),
-		payPerView: formatPaymentUnits({amountString:payPerView, decimals:tokenDecimals}),
-		budget: formatPaymentUnits({amountString:budget, decimals:tokenDecimals}),
-		budgetRemaining: usingEth ? 
-			formatPaymentUnits({amountString:await getContractEthBalance({provider:provider, address:agreementAddr}), decimals:tokenDecimals}) 
-			: formatPaymentUnits({amountString:await getContractTokenBalance({provider:provider, chainId:chainId, tokenId:tokenId, address:tokenPaymentAddress}), decimals:tokenDecimals}),
-		agreementFileUrl: (agreementFileUrl ? agreementFileUrl : ""),
+		brand: _brand,
+		influencer: _influencer,
+		shortCreatedDate: shortCreatedDate,
+		longCreatedDate: longCreatedDate,
+		shortEndDate: shortEndDate,
+		longEndDate: longEndDate,
+		payPerView: payPerViewFormatted,
+		budget: budgetFormatted,
+		budgetRemaining: budgetRemainingFormatted,
+		agreementFileUrl: _agreementFileUrl,
 		usingEth: usingEth,
-		mediaLink: mediaLink ? mediaLink : "",
-		agreementStatus: getStatusName({statusId:agreementStatus}),
+		mediaLink: _mediaLink,
+		agreementStatus: _agreementStatus,
 	});
 
 }

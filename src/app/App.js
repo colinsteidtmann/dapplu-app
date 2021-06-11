@@ -1,7 +1,7 @@
 import '#app/App.css';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 // Components
-import {Header } from "#components"
+import {Header} from "#components"
 // Pages
 import {Launch, Agreement, Create} from "#pages";
 

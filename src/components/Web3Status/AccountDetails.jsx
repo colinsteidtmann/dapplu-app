@@ -5,7 +5,7 @@ import {Identicon, Modal} from "#components";
 // custom imports
 import { useProviderStore } from '#hooks';
 import {shortenAddress} from "#utils";
-import {chainName} from "#constants";
+import {getChainName} from "#utils/dappFunctions";
 import Copy from "./Copy";
 
 
@@ -14,6 +14,8 @@ export const AccountDetails = (props) => {
 	const {account, chainId} = useProviderStore((state) => ({ account: state.account, chainId: state.chainId}), shallow);
 	const connectProvider = useProviderStore((state) => state.connectProvider);
 	const disconnect = useProviderStore((state) => state.disconnect);
+
+	const chainName = getChainName({"chainId":chainId});
 	
 	const handleProviderChange = React.useCallback(async () => {
 	  try { 
@@ -32,7 +34,7 @@ export const AccountDetails = (props) => {
 	      <Modal.Body>
 		      	<div className="border border-primary rounded p-3 text-start">
 		      		<p>
-		      			Connected to {chainName[chainId]} 
+		      			Connected to {chainName} 
 		      			<button className="btn btn-outline-primary float-end btn-sm" data-bs-dismiss="modal" onClick={handleProviderChange}>Change</button>
 		      		</p>
 		      		<h5>

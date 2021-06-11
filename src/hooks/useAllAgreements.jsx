@@ -1,6 +1,7 @@
 import {useEffect} from "react";
 import {useProviderStore, useGeneralStore} from "#hooks";
 import {getDisplayAgreementDetails, getUsersAgreementAddresses} from "#utils/contractFunctions";
+import {isChainSupported} from "#utils";
 
 // Get's an ethereum user's agreements created
 export const useAllAgreements = () => {
@@ -10,6 +11,7 @@ export const useAllAgreements = () => {
     const account = useProviderStore(state => state.account);
     const chainId = useProviderStore(state => state.chainId);
     const provider = useProviderStore(state => state.provider);
+    const chainSupport = isChainSupported({"chainId":chainId});
 
 
 
@@ -28,11 +30,11 @@ export const useAllAgreements = () => {
             });
         }
 
-        if (account && chainId && provider && usersAgreements.length === 0) {
+        if (account && chainId && provider && usersAgreements.length === 0 && chainSupport) {
             updateUsersAgreements();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [account, chainId, provider, contractEvent])
+    }, [account, chainId, provider, chainSupport, contractEvent])
 
     return usersAgreements;
 }
