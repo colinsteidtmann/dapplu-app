@@ -80,7 +80,7 @@ export const isChainSupported = ({chainId}) => {
 }
 
 export const isTokenSupported = ({tokenId, chainId}) => {
-  if (!chainId || !tokenId) {
+  if (!chainId || tokenId === undefined) {
     return false;
   }
   

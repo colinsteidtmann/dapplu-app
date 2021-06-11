@@ -7,6 +7,7 @@ export const TokenPaymentOption = (props) => {
 	const [paymentToken, setPaymentToken] = useState(0);
 	const {values, id} = props;
 	const chainId = useProviderStore((state) => state.chainId);
+	console.log("tokensInfo", isTokenSupported({tokenId:0,chainId:42}))
 	return (
 	    <div>
 			<div className="btn-group d-block w-max-content ">
@@ -18,7 +19,6 @@ export const TokenPaymentOption = (props) => {
 			  </button>
 			  <ul className="dropdown-menu">
 			  	{tokensInfo.map((token, index) => (
-
 			  		isTokenSupported({"tokenId":token.id, "chainId":chainId}) &&
 		  				<li key={index}>
 		  				  <button
